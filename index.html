@@ -1,0 +1,695 @@
+Вот полный код интернет-магазина, объединённый в один HTML-файл. Он включает в себя тёмную тему, корзину и форму обратной связи.
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой Магазин | Распродажа года</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-theme {
+    background-color: #222222;
+    color: #eeeeee;
+}
+
+body.dark-theme .header,
+body.dark-theme .footer {
+    background-color: #111111;
+    color: #dddddd;
+}
+
+body.dark-theme .product-card {
+    background-color: #333333;
+    border-color: #444444;
+    color: #eeeeee;
+}
+
+body.dark-theme .hero {
+    background-color: #1a3a4a;
+}
+
+body.dark-theme .feedback-form input,
+body.dark-theme .feedback-form select,
+body.dark-theme .feedback-form textarea {
+    background-color: #444444;
+    color: #eeeeee;
+    border-color: #666666;
+}
+
+.header {
+    background-color: #333333;
+    color: #ffffff;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__title {
+    font-family: 'Georgia', serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.theme-toggle {
+    background-color: #555555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+    background-color: #777777;
+}
+
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    margin-bottom: 40px;
+}
+
+.hero__content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero__title {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+}
+
+.hero__text {
+    font-size: 20px;
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+}
+
+.hero__button {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #764ba2;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hero__button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 40px;
+    font-family: 'Georgia', serif;
+}
+
+.products {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.products__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: box-shadow 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.product-card__image {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 180px;
+    object-fit: contain;
+    background: #f8f8f8;
+}
+
+.product-card__title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-family: 'Georgia', serif;
+}
+
+.product-card__price {
+    font-size: 20px;
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+body.dark-theme .product-card__price {
+    color: #6fcf97;
+}
+
+.product-card__buy {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.product-card__buy:hover {
+    background-color: #0056b3;
+}
+
+.cart-counter-section {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    text-align: center;
+}
+
+body.dark-theme .cart-counter-section {
+    background-color: #2d3748;
+}
+
+.cart-info h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.cart-controls {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.cart-count {
+    color: #dc3545;
+}
+
+.cart-note {
+    margin: 15px 0;
+    color: #6c757d;
+}
+
+body.dark-theme .cart-note {
+    color: #adb5bd;
+}
+
+.cart-buttons button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.1s ease;
+}
+
+.cart-buttons button#cart-decrement {
+    background-color: #dc3545;
+}
+
+.cart-buttons button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.feedback {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.feedback-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .feedback-form {
+    background-color: #2d3748;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-group label {
+    font-weight: normal;
+}
+
+.form-submit {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.form-submit:hover {
+    background-color: #218838;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 40px;
+}
+
+.footer__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+    .hero__title {
+        font-size: 32px;
+    }
+    .section-title {
+        font-size: 28px;
+    }
+    .cart-controls {
+        font-size: 36px;
+    }
+    .radio-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header__container">
+        <h1 class="header__title">Мой Магазин</h1>
+        <button class="theme-toggle" id="theme-toggle">Тёмная тема</button>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero__content">
+            <h2 class="hero__title">Главная распродажа года</h2>
+            <p class="hero__text">Скидки до 50% на лучшие товары</p>
+            <a href="#products" class="hero__button" id="heroDetailsBtn">Подробнее</a>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <h2 class="section-title">Наши товары</h2>
+        <div class="products__grid">
+            <div class="product-card">
+                <img src="https://online-samsung.ru/sites/default/files/styles/product_full/public/2024-01/SM-A256ELBHCAU_1-min.png.webp?itok=2VnUkD0J" alt="Смартфон" class="product-card__image">
+                <h3 class="product-card__title">Смартфон</h3>
+                <p class="product-card__price">Цена: 11000 ₽</p>
+                <button class="product-card__buy" data-product="Смартфон">В корзину</button>
+            </div>
+            <div class="product-card">
+                <img src="https://static.vecteezy.com/system/resources/previews/039/630/611/non_2x/ai-generated-white-headphones-luxury-white-headphones-isolated-transparent-background-free-png.png" alt="Наушники" class="product-card__image">
+                <h3 class="product-card__title">Наушники</h3>
+                <p class="product-card__price">Цена: 3000 ₽</p>
+                <button class="product-card__buy" data-product="Наушники">В корзину</button>
+            </div>
+            <div class="product-card">
+                <img src="https://mi-shop.com/upload/iblock/81d/amm9q7b6e3jyxhzqyd8l1rhfrm4kz9nv.png" alt="Часы" class="product-card__image">
+                <h3 class="product-card__title">Часы</h3>
+                <p class="product-card__price">Цена: 1500 ₽</p>
+                <button class="product-card__buy" data-product="Часы">В корзину</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cart-counter-section">
+        <div class="cart-info">
+            <h3>Ваша корзина</h3>
+            <div class="cart-controls">
+                <span class="cart-count" id="cart-count">0</span>
+                <span>товаров</span>
+            </div>
+            <p class="cart-note">Нажимайте "В корзину", чтобы добавить товар. Используйте кнопки ниже для ручной корректировки:</p>
+            <div class="cart-buttons">
+                <button id="cart-decrement">🗑️ Убрать один</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="feedback">
+        <h2 class="section-title">Оставьте отзыв</h2>
+        <form class="feedback-form" id="feedback-form">
+            <div class="form-group">
+                <label for="name">1. Ваше имя:</label>
+                <input type="text" id="name" name="name" placeholder="Иван" required>
+            </div>
+            <div class="form-group">
+                <label for="email">2. Ваш Email:</label>
+                <input type="email" id="email" name="email" placeholder="ivan@mail.ru" required>
+            </div>
+            <div class="form-group">
+                <label>3. Как вы оцениваете наш сайт?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="rating" value="5" checked> Отлично</label>
+                    <label><input type="radio" name="rating" value="4"> Хорошо</label>
+                    <label><input type="radio" name="rating" value="3"> Средне</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="product-choice">4. Какой товар вас интересует?</label>
+                <select id="product-choice" name="product">
+                    <option value="smartphone">Смартфон</option>
+                    <option value="headphones">Наушники</option>
+                    <option value="watch">Часы</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">5. Ваш комментарий:</label>
+                <textarea id="message" name="message" rows="3" placeholder="Напишите пару слов..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">Отправить</button>
+        </form>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer__container">
+        <p>&copy; 2023 Мой Магазин. Все права защищены.</p>
+        <p>г. Москва, ул. Примерная, д. 1</p>
+    </div>
+</footer>
+
+<script>
+    (function() {
+       
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const cartCountElement = document.getElementById('cart-count');
+        const buyButtons = document.querySelectorAll('.product-card__buy');
+        const decrementBtn = document.getElementById('cart-decrement');
+        const feedbackForm = document.getElementById('feedback-form');
+        const heroButton = document.getElementById('heroDetailsBtn');
+        
+        let cartCount = 0;
+        
+        
+        function updateCartDisplay() {
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount;
+            }
+            
+            if (cartCountElement) {
+                cartCountElement.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    if(cartCountElement) cartCountElement.style.transform = 'scale(1)';
+                }, 150);
+            }
+        }
+        
+       
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            if (themeToggleBtn) themeToggleBtn.textContent = 'Светлая тема';
+        } else {
+            
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-theme');
+                if (themeToggleBtn) themeToggleBtn.textContent = 'Тёмная тема';
+            }
+        }
+        
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                body.classList.toggle('dark-theme');
+                if (body.classList.contains('dark-theme')) {
+                    themeToggleBtn.textContent = 'Светлая тема';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeToggleBtn.textContent = 'Тёмная тема';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+        
+        
+        if (buyButtons.length) {
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    cartCount++;
+                    updateCartDisplay();
+                    const productName = this.getAttribute('data-product') || 'Товар';
+                    console.log(`Товар "${productName}" добавлен в корзину. Всего товаров: ${cartCount}`);
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '✓ Добавлено!';
+                    this.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.backgroundColor = '#007bff';
+                    }, 600);
+                });
+            });
+        }
+        
+        
+        if (decrementBtn) {
+            decrementBtn.addEventListener('click', function() {
+                if (cartCount > 0) {
+                    cartCount--;
+                    updateCartDisplay();
+                    console.log(`Убран один товар. Теперь в корзине: ${cartCount} товаров`);
+                } else {
+                    alert('Корзина уже пуста! Добавьте товары через кнопку "В корзину".');
+                    console.log('Попытка уменьшить корзину, но она пуста');
+                }
+            });
+        }
+        
+        
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(feedbackForm);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+                
+                if (!data.name || !data.email) {
+                    alert('Пожалуйста, заполните имя и email!');
+                    return;
+                }
+                console.log('📝 Отправлен отзыв:', data);
+                alert(`Спасибо, ${data.name || 'гость'}! Ваш отзыв принят. (Данные отправлены в консоль)`);
+                feedbackForm.reset();
+                
+                const defaultRating = document.querySelector('input[name="rating"][value="5"]');
+                if (defaultRating) defaultRating.checked = true;
+                
+                const submitBtn = feedbackForm.querySelector('.form-submit');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = '✓ Отправлено!';
+                submitBtn.style.backgroundColor = '#218838';
+                setTimeout(() => {
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.style.backgroundColor = '#28a745';
+                }, 1000);
+            });
+        }
+        
+        
+        let heroClicks = 0;
+        if (heroButton) {
+          
+            heroButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                heroClicks++;
+                console.log(`🔍 Кликов по кнопке "Подробнее": ${heroClicks}`);
+                alert(`Вы нажали на кнопку "Подробнее" ${heroClicks} раз(а)`);
+                const productsSection = document.getElementById('products');
+                if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        }
+        
+       
+        const cartContainer = document.querySelector('.cart-counter-section');
+        function blinkCart() {
+            if (cartContainer) {
+                cartContainer.style.transition = 'background-color 0.2s';
+                const originalBg = getComputedStyle(cartContainer).backgroundColor;
+                cartContainer.style.backgroundColor = '#cfe2ff';
+                setTimeout(() => {
+                    if (cartContainer) cartContainer.style.backgroundColor = originalBg;
+                }, 200);
+            }
+        }
+        
+      
+        const originalAddHandler = buyButtons.length ? buyButtons[0].click : null;
+     
+        function notifyCartUpdate() {
+            blinkCart();
+        }
+        
+      
+        const originalUpdate = updateCartDisplay;
+        window.updateCartDisplay = function() {
+            originalUpdate();
+            notifyCartUpdate();
+        };
+       
+        const superUpdate = updateCartDisplay;
+        const enhancedUpdate = function() {
+            superUpdate();
+            blinkCart();
+        };
+        
+        window.enhancedCartUpdater = enhancedUpdate;
+       
+        if (buyButtons.length) {
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(() => blinkCart(), 10);
+                });
+            });
+        }
+        if (decrementBtn) {
+            decrementBtn.addEventListener('click', () => {
+                setTimeout(() => blinkCart(), 10);
+            });
+        }
+        
+        
+        console.log('✨ Сайт загружен! Добро пожаловать в Мой Магазин. Используйте тёмную тему, корзину и форму отзыва.');
+        
+        
+        const emailInput = document.getElementById('email');
+        if (emailInput && feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                const emailVal = emailInput.value.trim();
+                if (emailVal && !emailVal.includes('@')) {
+                    e.preventDefault();
+                    alert('Пожалуйста, введите корректный email (например, name@domain.com)');
+                    return false;
+                }
+               
+                return true;
+            });
+        }
+        
+     
+        if (cartCountElement) {
+            cartCountElement.addEventListener('dblclick', function() {
+                if (confirm('Сбросить корзину в ноль?')) {
+                    cartCount = 0;
+                    updateCartDisplay();
+                    console.log('Корзина сброшена двойным кликом.');
+                    blinkCart();
+                }
+            });
+        }
+        
+      
+        
+       
+        updateCartDisplay();
+        
+       
+    
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === "#" || href === "") return;
+                const targetElem = document.querySelector(href);
+                if (targetElem && this !== heroButton) { // hero уже обработан отдельно
+                    e.preventDefault();
+                    targetElem.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    })();
+</script>
+</body>
+</html>
+```
